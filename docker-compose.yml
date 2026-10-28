@@ -1,0 +1,23 @@
+services:
+  api:
+    build: ./backend
+    container_name: atelio_vitrine_api
+    restart: unless-stopped
+    env_file: ./backend/.env
+    environment:
+      PORT: 4100
+      DATA_DIR: /data
+    volumes:
+      - vitrine_data:/data
+
+  web:
+    build: ./frontend
+    container_name: atelio_vitrine_web
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - '${APP_HTTP_PORT:-8080}:80'
+
+volumes:
+  vitrine_data:
